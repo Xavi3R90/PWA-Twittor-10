@@ -140,6 +140,22 @@ postBtn.on('click', function() {
         return;
     }
 
+    var data = {
+        mensaje: mensaje,
+        user: usuario
+    };
+
+    fetch('api', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify( data )
+    })
+    .then( res => res.json() )
+    .then( res => console.log( 'app.js', res ) )
+    .catch( err => console.log( 'app.js error: ', err ) );
+
     crearMensajeHTML( mensaje, usuario );
 
 });
@@ -163,3 +179,35 @@ function getMensajes(){
 };
 
 getMensajes();
+
+
+// Detectar cambios de conexión
+function isOnline() {
+
+    if( navigator.onLine ){
+        // Tenemos conexión
+        //console.log( 'Online' );
+        mdtoast('Online', {
+            interaction: true,
+            interactionTimeout: 4000,
+            actionText: 'OK!'
+        });
+
+    }else{
+        // No tenemos conexión
+        //console.log( 'OffLine' );
+        mdtoast('OffLine', {
+            interaction: true,
+            actionText: 'OK',
+            type: 'warning'
+        });
+    }
+
+}
+
+
+
+window.addEventListener('online', isOnline);
+window.addEventListener('offline', isOnline);
+
+isOnline();
